@@ -6,15 +6,14 @@ import { Component }          from '@angular/core';
   template: `
     <h1>{{title}}</h1>
     <nav>
-      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-      <a routerLink="/heroes" routerLinkActive="active">Heroes</a>
+      <a routerLink="/contracts" routerLinkActive="active">Contracts</a>
     </nav>
     <router-outlet></router-outlet>
   `,
   styleUrls: ['assets/app/app.component.css'],
 })
 export class AppComponent {
-  public title = 'Tour of Heroes';
+  public title = 'Contracts';
 }
 
 /*

@@ -1,0 +1,15 @@
+<h2>My Contracts</h2>
+<ul class="contracts">
+  <li *ngFor="let contract of contracts" (click)="onSelect(contract)"
+      [class.selected]="contract === selectedContract">
+    <span class="badge">{{contract.id}}</span>
+    <span>{{contract.fileName}}</span>
+    <button class="delete"
+            (click)="delete(contract); $event.stopPropagation()">x</button>
+  </li>
+</ul>
+<div *ngIf="selectedContract">
+  <h2>
+    {{selectedContract.fileName | uppercase}} is my contract
+  </h2>
+</div>
