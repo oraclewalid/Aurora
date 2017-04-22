@@ -12,9 +12,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class ContractsController @Inject()(contractsService: ContractsService) extends Controller {
-  def all = Action.async {
-    contractsService.all.map { s => Ok(toDataField(s)) }
-  }
 
   private def toDataField[A](value: A)(implicit writes: Writes[A]): JsValue = {
     JsObject(Seq("data" -> Json.toJson(value)))

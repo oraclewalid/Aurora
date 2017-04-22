@@ -16,7 +16,7 @@ export class ContractService {
   public getContracts(): Promise<Contract[]> {
     return this.http.get(this.contractUrl)
       .toPromise()
-      .then(response => response.json().data as Contract[])
+      .then(response => response.json() as Contract[])
       .catch(this.handleError);
   }
 

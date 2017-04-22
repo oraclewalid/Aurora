@@ -1,6 +1,7 @@
 package services
 
 import java.io.File
+import java.sql.Timestamp
 import javax.inject.Singleton
 
 import models.Contract
@@ -23,14 +24,8 @@ class ContractsService {
   }
 
   @volatile private var contracts = Map(
-      11 -> Contract(id = "11", fileName = "Contact-11", oid = 12),
-      12 -> Contract(id = "12", fileName = "Contact-12", oid = 12),
-      13 -> Contract(id = "13", fileName = "Contact-13", oid = 12),
-      14 -> Contract(id = "14", fileName = "Contact-14", oid = 12),
-      15 -> Contract(id = "15", fileName = "Contact-15", oid = 12)
+      15 -> Contract(id = "15", fileName = "Contact-15", oid = 12, creationDate = new Timestamp(System.currentTimeMillis()))
   )
-
-  def all: Future[List[Contract]] = Future.successful(contracts.values.toList.sortBy(_.id))
 
   def delete(id: Int):Future[Option[Contract]] = {
     val answer = contracts.get(id)
@@ -39,13 +34,10 @@ class ContractsService {
   }
 
   def create(fileName: String): Future[Contract] = Future.successful {
-    val id = contracts.keys.max + 1
-    contracts = contracts + (id -> Contract(id.toString, fileName, oid = 102))
-    Contract(id.toString, fileName, oid = 112)
+    contracts.get(15).get
   }
 
   def update(id: Int, fileName: String): Future[Contract] = Future.successful {
-    contracts = contracts + (id -> Contract(id.toString, fileName, oid = 102))
-    Contract(id.toString, fileName, oid = 112)
+    contracts.get(15).get
   }
 }
