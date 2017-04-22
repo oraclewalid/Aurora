@@ -8,6 +8,7 @@ updateOptions := updateOptions.value.withCachedResolution(cachedResoluton = true
 JsEngineKeys.engineType := JsEngineKeys.EngineType.Node
 
 resolvers += Resolver.jcenterRepo
+resolvers += "Atlassian" at "https://maven.atlassian.com/3rdparty/"
 
 libraryDependencies ++= {
   val ngVersion="2.2.0"
@@ -36,9 +37,12 @@ libraryDependencies ++= {
     "org.webjars.npm" % "tslint-eslint-rules" % "3.4.0",
     "org.webjars.npm" % "tslint-microsoft-contrib" % "4.0.0",
     //   "org.webjars.npm" % "codelyzer" % "2.0.0-beta.1",
-    "org.webjars.npm" % "types__jasmine" % "2.2.26-alpha" % "test"
+    "org.webjars.npm" % "types__jasmine" % "2.2.26-alpha" % "test",
     //test
     //  "org.webjars.npm" % "jasmine-core" % "2.4.1"
+    "postgresql" % "postgresql" % "9.4.1208-jdbc42-atlassian-hosted",
+    "org.tpolecat" %% "doobie-core-cats" % "0.4.1",
+    "org.tpolecat" %% "doobie-postgres-cats" % "0.4.1"
   )
 }
 dependencyOverrides += "org.webjars.npm" % "minimatch" % "3.0.0"
