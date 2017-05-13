@@ -42,7 +42,9 @@ libraryDependencies ++= {
     //  "org.webjars.npm" % "jasmine-core" % "2.4.1"
     "postgresql" % "postgresql" % "9.4.1208-jdbc42-atlassian-hosted",
     "org.tpolecat" %% "doobie-core-cats" % "0.4.1",
-    "org.tpolecat" %% "doobie-postgres-cats" % "0.4.1"
+    "org.tpolecat" %% "doobie-postgres-cats" % "0.4.1",
+    "org.apache.pdfbox" % "pdfbox" % "2.0.5",
+    "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.6"
   )
 }
 dependencyOverrides += "org.webjars.npm" % "minimatch" % "3.0.0"
