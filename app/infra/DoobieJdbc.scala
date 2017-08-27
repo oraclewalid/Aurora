@@ -1,8 +1,5 @@
 package infra
 
-import cats._
-import cats.data._
-import cats.implicits._
 import com.typesafe.config.ConfigFactory
 import doobie.imports._
 

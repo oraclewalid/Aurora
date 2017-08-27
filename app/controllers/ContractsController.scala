@@ -1,11 +1,10 @@
 package controllers
 
-import java.io.File
 import javax.inject.Inject
 
-import play.api.Logger
-import play.api.libs.json.{JsObject, JsValue, Json, Writes}
-import play.api.mvc.{Action, Controller}
+import models.{Bloc, Contract}
+import play.api.libs.json._
+import play.api.mvc.{Action, BodyParsers, Controller}
 import services.ContractsService
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -17,34 +16,35 @@ class ContractsController @Inject()(contractsService: ContractsService) extends 
     JsObject(Seq("data" -> Json.toJson(value)))
   }
 
-  def delete(id: Int) = Action.async {
-    contractsService.delete(id).map { _ => Ok("") }
-  }
-
-  def create = Action.async(parse.json) { implicit request =>
-    (request.body \ "name").asOpt[String]
-      .map { name =>
-        contractsService
-          .create(name)
-          .map(s => Ok(toDataField(s)))
-      }.getOrElse(Future.successful(BadRequest("expected 'name'")))
-  }
-
-  def update(id: Int) = Action.async(parse.json) { implicit request =>
-    (request.body \ "name").asOpt[String]
-      .map { name =>
-        contractsService.update(id, name)
-          .map(s => Ok(toDataField(s)))
-      }.getOrElse(Future.successful(BadRequest("expected 'name'")))
-  }
-
   def upload() = Action(parse.temporaryFile) { request =>
-    val contract = request.map(tmpFile => contractsService.archive(Option(tmpFile.file))).body
-    Ok(Json.toJson(contract))
+//    val contract = request.map(tmpFile => contractsService.archive(Option(tmpFile.file))).body
+//    Ok(Json.toJson(contract))
+    Ok
   }
 
   def list =  Action {
     Ok(Json.toJson(contractsService.list))
+  }
+
+  def create = Action(BodyParsers.parse.json) { request =>
+    val contractJson = request.body.validate[Contract]
+    contractJson.fold(
+      errors => {
+        BadRequest(Json.obj("status" ->"KO", "message" -> JsError.toJson(errors)))
+      },
+      contract => {
+        Contract.save(contract)
+        Ok(Json.obj("status" ->"OK", "message" -> (s"${contract.nomContrat} was created") ))
+      }
+    )
+  }
+
+  def get(contractId: Long) = Action {
+    val contract = Contract.get(contractId)
+    contract.fold(NotFound("id not found")) {
+      val blocs = Bloc.list(contractId)
+      contract => Ok(Json.obj("contract" -> Json.toJson(contract), "blocs" -> Json.toJson(blocs)))
+    }
   }
 
 }

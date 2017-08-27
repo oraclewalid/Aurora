@@ -3,7 +3,7 @@ package models
 import java.io.File
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
+import java.time.{LocalDate, LocalDateTime}
 
 import com.typesafe.config.ConfigFactory
 import doobie.postgres.imports._
@@ -11,9 +11,10 @@ import infra.DoobieJdbc
 import models.Contract.ContratId
 import play.api.libs.json._
 
+import scala.runtime.Nothing$
 import scala.util.Try
 
-case class Contract(id : ContratId, fileName: String , category : String = "UNKNOWN", creationDate : Timestamp, oid : Long)
+case class Contract(id :Long, dealId :Long, nomContrat :String, nomClient :String , typeContrat : String, startDate : LocalDate, lastDate : LocalDate, creationDate : LocalDate, buyerOrSeller : String)
 
 
 
@@ -29,7 +30,7 @@ object Contract extends DoobieJdbc{
   import xa.yolo._
 
   def from(maybeFile: File, largeFile: Long) : Contract = {
-     Contract(fileName= maybeFile.getName, oid = largeFile, id = "42", creationDate = new Timestamp(System.currentTimeMillis()))
+    null
   }
 
   def archive(file : File): Option[Long] = {
@@ -45,20 +46,22 @@ object Contract extends DoobieJdbc{
     }.toOption
   }
 
-  def create(contract: Contract) = {
+  def save(contract: Contract) = {
 
     sql"""
           INSERT
-          INTO contract (fileName, category,creationDate , oid)
-          VALUES (${contract.fileName}, ${contract.category}, now(), ${contract.oid})
+          INTO  contract("dealid","nomcontrat", "nomclient","typecontrat","startdate", "lastdate", "creationdate", "buyerorseller")
+          VALUES (${contract.dealId}, ${contract.nomContrat}, ${contract.nomClient}, ${contract.typeContrat},
+          ${contract.startDate}, ${contract.lastDate}, ${contract.creationDate}, ${contract.buyerOrSeller})
       """.update
-      //.withUniqueGeneratedKeys[String]("id")
-      .run.transact(xa).unsafePerformIO
+      .run
+      .transact(xa)
+      .unsafePerformIO
   }
 
   def list : Seq[Contract]= {
     sql"""
-          SELECT id, filename, category,creationDate, oid
+          SELECT *
           FROM contract
       """.query[Contract]
       .list
@@ -66,13 +69,14 @@ object Contract extends DoobieJdbc{
       .unsafePerformIO
   }
 
-  implicit object timestampFormat extends Format[Timestamp] {
-    val format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS'Z'")
-    def reads(json: JsValue) = {
-      val str = json.as[String]
-      JsSuccess(new Timestamp(format.parse(str).getTime))
-    }
-    def writes(ts: Timestamp) = JsString(format.format(ts))
+  def get(contractId :Long) : Option[Contract]= {
+    sql"""
+          SELECT *
+          FROM contract where id = ${contractId}
+      """.query[Contract]
+      .option
+      .transact(xa)
+      .unsafePerformIO
   }
 
   implicit val format = Json.format[Contract]

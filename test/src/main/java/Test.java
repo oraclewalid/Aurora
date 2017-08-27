@@ -11,7 +11,7 @@ public class Test {
   public static void main(String[] args) throws IOException {
     PDDocument doc = PDDocument.load("/home/walid/LawInsiderContract7pYKoWqzzJkbry5nrcoPAD.pdf");
     PDFTextStripper stripper = new PDFTextStripper();
-    String text = stripper.(doc);
+    String text = stripper.getText(doc);
     System.out.println(text);
     doc.close();
   }

@@ -8,10 +8,19 @@ GET     /                           controllers.Application.index
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
-GET     /api/contracts              controllers.ContractsController.list
-POST    /api/contracts              controllers.ContractsController.upload
-PUT     /api/contracts/:id          controllers.ContractsController.update(id:Int)
-DELETE  /api/contracts/:id          controllers.ContractsController.delete(id:Int)
+GET     /api/contracts             controllers.ContractsController.list(id : Long)
+GET     /api/contract/:id          controllers.ContractsController.get(id : Long)
+POST    /api/contract              controllers.ContractsController.create
+
+
+GET     /api/blocs/:id             controllers.BlocController.list(id : Long)
+GET     /api/bloc/:id              controllers.BlocController.get(id : Long)
+POST    /api/bloc                  controllers.BlocController.create
+PUT     /api/bloc                  controllers.BlocController.update
+
+GET     /api/deals                  controllers.DealController.list
+POST    /api/deals                  controllers.DealController.create
+
 
 GET     /api/*notFound              controllers.Application.notFound(notFound)
 

@@ -2,10 +2,11 @@
 <ul class="contracts">
   <li *ngFor="let contract of contracts" (click)="onSelect(contract)"
       [class.selected]="contract === selectedContract">
-    <span class="badge">{{contract.id}}</span>
     <span>{{contract.fileName}}</span>
-    <button class="delete"
-            (click)="delete(contract); $event.stopPropagation()">x</button>
+    <span>{{contract.creationDate}}</span>
+    <button class="delete" (click)="delete(contract); $event.stopPropagation()">x</button>
+    <button class="delete" (click)="download(contract); $event.stopPropagation()">x</button>
+    <button class="delete" (click)="delete(contract); $event.stopPropagation()">x</button>
   </li>
 </ul>
 <div *ngIf="selectedContract">
